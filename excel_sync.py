@@ -1,5 +1,5 @@
 import pandas as pd
-from database import Database
+import config
 
 def sync_excel_to_database(excel_file_path):
     """
@@ -17,7 +17,22 @@ def sync_excel_to_database(excel_file_path):
     - Certifications
     - Interests
     """
-    db = Database()
+    # Initialize database based on configuration
+    if config.DATABASE_TYPE.lower() == "mysql":
+        from database_mysql import MySQLDatabase
+        db = MySQLDatabase(
+            host=config.MYSQL_HOST,
+            port=config.MYSQL_PORT,
+            database=config.MYSQL_DATABASE,
+            username=config.MYSQL_USERNAME,
+            password=config.MYSQL_PASSWORD,
+            use_ssl=config.MYSQL_USE_SSL
+        )
+        print(f"✅ Using MySQL Database: {config.MYSQL_HOST}/{config.MYSQL_DATABASE}")
+    else:
+        from database import Database
+        db = Database(db_name=config.SQLITE_DB_NAME)
+        print(f"✅ Using SQLite Database: {config.SQLITE_DB_NAME}")
     
     try:
         # Read Excel file

@@ -1,15 +1,19 @@
-# 🎯 Volunteer Management System
+# 🎯 ResuMatch VMS
+**AI-Powered Volunteer Management System**
 
-An AI-powered volunteer management application that uses resume parsing and intelligent matching to shortlist volunteers based on job descriptions.
+An intelligent volunteer recruitment platform that uses AI-powered resume parsing and hybrid matching algorithms to shortlist the best volunteers for your organization.
 
-## 📋 Features
+## ✨ Features
 
-- **Excel Data Sync**: Import volunteer data from Excel files into SQL database
-- **AI-Powered Matching**: Uses TF-IDF and cosine similarity to match volunteers with job requirements
-- **Modern Frontend**: Clean, responsive UI for HR managers to enter job descriptions
-- **Shortlisting System**: Automatically shortlist and rank volunteers based on match scores
-- **Database Storage**: All data and shortlisted candidates stored in SQL database
-- **Real-time Stats**: View total volunteers and shortlisted count at a glance
+- 📄 **Resume Upload**: Upload PDF/DOCX resumes with automatic data extraction
+- 🤖 **AI Keyword Extraction**: GPT-4 powered job description analysis
+- 🎯 **Hybrid Matching**: TF-IDF + AI for fast and accurate volunteer matching
+- 📊 **Excel Import**: Bulk import volunteers from Excel files
+- 🔄 **Google Sheets Sync**: Real-time sync with Google Forms/Sheets
+- 💾 **MySQL Database**: Professional database with local or cloud support
+- 📱 **Modern UI**: Beautiful, responsive web interface
+- 🔍 **Smart Search**: Match volunteers with job requirements automatically
+- 📈 **Real-time Stats**: View volunteer pool and shortlisted candidates
 
 ## 🏗️ Architecture
 
@@ -27,59 +31,61 @@ An AI-powered volunteer management application that uses resume parsing and inte
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### 1. Setup MySQL Database
+
+1. Install MySQL and open MySQL Workbench
+2. Create database:
+   ```sql
+   CREATE DATABASE resumatch_db;
+   ```
+
+### 2. Configure Application
+
+Edit `config.py`:
+```python
+MYSQL_USERNAME = "root"  # Your MySQL username
+MYSQL_PASSWORD = "your_password"  # Your MySQL password
+```
+
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Create Sample Data
-
-```bash
-python create_sample_data.py
-```
-
-This generates `volunteers_data.xlsx` with 15 sample volunteers.
-
-### 3. Sync Data to Database
-
-```bash
-python excel_sync.py
-```
-
-This imports the Excel data into the SQL database.
-
-### 4. Run the Application
+### 4. Run Application
 
 ```bash
 python app.py
 ```
 
-The application will start at `http://localhost:5000`
+Open browser: `http://localhost:5000`
 
-## 📊 Database Schema
+### 5. (Optional) Import Sample Data
 
-### Volunteers Table
-- `id`: Primary key
-- `name`: Volunteer name
-- `email`: Email address (unique)
-- `phone`: Phone number
-- `skills`: Skills and technologies
-- `experience`: Work experience
-- `education`: Educational background
-- `availability`: Time availability
-- `languages`: Languages spoken
-- `certifications`: Professional certifications
-- `interests`: Areas of interest
-- `created_at`: Timestamp
+```bash
+python create_sample_data.py
+python excel_sync.py
+```
 
-### Shortlisted Volunteers Table
-- `id`: Primary key
-- `volunteer_id`: Foreign key to volunteers
-- `job_description`: Job description used for matching
-- `match_score`: Matching score (0-100)
-- `matching_skills`: JSON array of matching skills
-- `shortlisted_at`: Timestamp
+## 💾 Database Support
+
+**Two database options:**
+
+### MySQL (Recommended)
+- Better performance
+- Professional database
+- Easy to use with MySQL Workbench
+- Supports concurrent users
+
+### SQLite (Development)
+- No setup required
+- File-based database
+- Good for testing
+
+**Switch databases:** Change `DATABASE_TYPE` in `config.py`
+
+See `DATABASE_SETUP.md` for detailed instructions.
 
 ## 🎨 How to Use
 
@@ -122,13 +128,16 @@ development practices is a plus.
 - `DELETE /api/shortlisted/clear` - Clear shortlisted volunteers
 - `GET /api/stats` - Get database statistics
 
-## 📦 Technologies Used
+## 🛠️ Technology Stack
 
 - **Backend**: Flask (Python)
-- **Database**: SQLite
-- **ML/AI**: scikit-learn (TF-IDF, Cosine Similarity)
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Database**: MySQL (or SQLite for development)
+- **AI**: Azure OpenAI (GPT-4) for keyword extraction
+- **ML**: scikit-learn (TF-IDF, Cosine Similarity)
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
 - **Data Processing**: Pandas, NumPy
+- **Resume Parsing**: PyPDF2, python-docx
+- **Cloud Sync**: Google Sheets API
 
 ## 🔄 Resume Matching Algorithm
 

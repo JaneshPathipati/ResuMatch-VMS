@@ -17,3 +17,22 @@ MAX_VOLUNTEERS_TO_ANALYZE = 50  # Analyze top 50 candidates in detail
 TOP_MATCHES_TO_RETURN = 10  # Return top 10 best matches
 MIN_MATCH_SCORE = 60  # Minimum score to be considered a match (0-100)
 
+# Database Configuration
+DATABASE_TYPE = "sqlite"  # Options: "sqlite" or "mysql"
+
+# MySQL Database Configuration (if using MySQL HeatWave)
+MYSQL_HOST = "your-mysql-host"  # Private IP or public endpoint
+MYSQL_PORT = 3306
+MYSQL_DATABASE = "your_database_name"  # Database/schema name
+MYSQL_USERNAME = "your_mysql_username"
+MYSQL_PASSWORD = "your_mysql_password"
+MYSQL_USE_SSL = True  # Recommended for cloud databases
+
+# Examples for MYSQL_HOST:
+# - Private IP (with VPN): "10.0.0.64"
+# - Public Endpoint: "mysql-server.xxx.oci.oraclecloud.com"
+# - Local MySQL: "localhost"
+
+# SQLite Configuration (if using SQLite - local development)
+SQLITE_DB_NAME = "volunteer_management.db"
+

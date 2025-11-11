@@ -6,9 +6,9 @@ Supports both manual and automatic syncing
 
 import gspread
 from google.oauth2.service_account import Credentials
-from database import Database
 import time
 from datetime import datetime
+import config
 
 # Google Sheets API Scopes
 SCOPES = [
@@ -25,7 +25,24 @@ class GoogleSheetSync:
             credentials_file: Path to Google service account credentials JSON
         """
         self.credentials_file = credentials_file
-        self.db = Database()
+        
+        # Initialize database based on configuration
+        if config.DATABASE_TYPE.lower() == "mysql":
+            from database_mysql import MySQLDatabase
+            self.db = MySQLDatabase(
+                host=config.MYSQL_HOST,
+                port=config.MYSQL_PORT,
+                database=config.MYSQL_DATABASE,
+                username=config.MYSQL_USERNAME,
+                password=config.MYSQL_PASSWORD,
+                use_ssl=config.MYSQL_USE_SSL
+            )
+            print(f"✅ Using MySQL Database: {config.MYSQL_HOST}/{config.MYSQL_DATABASE}")
+        else:
+            from database import Database
+            self.db = Database(db_name=config.SQLITE_DB_NAME)
+            print(f"✅ Using SQLite Database: {config.SQLITE_DB_NAME}")
+        
         self.client = None
     
     def connect(self):

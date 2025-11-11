@@ -1,15 +1,31 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from database import Database
 from resume_matcher import ResumeMatcher  # Back to TF-IDF matcher (fast!)
 from keyword_extractor import KeywordExtractor  # AI for keyword extraction only
 from resume_parser import ResumeParser
 import json
+import config
+
+# Initialize database based on configuration
+if config.DATABASE_TYPE.lower() == "mysql":
+    from database_mysql import MySQLDatabase
+    db = MySQLDatabase(
+        host=config.MYSQL_HOST,
+        port=config.MYSQL_PORT,
+        database=config.MYSQL_DATABASE,
+        username=config.MYSQL_USERNAME,
+        password=config.MYSQL_PASSWORD,
+        use_ssl=config.MYSQL_USE_SSL
+    )
+    print(f"✅ Using MySQL Database: {config.MYSQL_HOST}:{config.MYSQL_PORT}/{config.MYSQL_DATABASE}")
+else:
+    from database import Database
+    db = Database(db_name=config.SQLITE_DB_NAME)
+    print(f"✅ Using SQLite Database: {config.SQLITE_DB_NAME}")
 
 app = Flask(__name__)
 CORS(app)
 
-db = Database()
 matcher = ResumeMatcher()  # Fast TF-IDF matching
 keyword_extractor = KeywordExtractor()  # AI keyword extraction
 parser = ResumeParser()
@@ -258,15 +274,10 @@ def get_stats():
 
 if __name__ == '__main__':
     print("\n" + "="*60)
-    print("Volunteer Management System Starting...")
+    print("🎯 ResuMatch VMS - Starting Server...")
     print("="*60)
-    print("\nInitializing database...")
-    
-    # Initialize database
-    db = Database()
-    
-    print("Database ready!")
-    print("\nServer starting at http://localhost:5000")
+    print("\n✅ Database connected and ready!")
+    print("✅ Server starting at http://localhost:5000")
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=5000)
