@@ -19,14 +19,17 @@ An intelligent volunteer recruitment platform that uses AI-powered resume parsin
 
 ```
 ├── app.py                    # Flask backend API
-├── database.py               # Database models and operations
+├── database_mysql.py         # MySQL database adapter
+├── config.py                 # Configuration (loads from .env)
+├── .env                      # Environment variables (NOT in Git)
+├── .env.example              # Template for .env file
 ├── resume_matcher.py         # AI matching engine
-├── excel_sync.py             # Excel to database sync script
-├── create_sample_data.py     # Generate sample volunteer data
-├── templates/
-│   └── index.html           # Frontend interface
-├── volunteers_data.xlsx      # Sample volunteer data (generated)
-└── volunteer_management.db   # SQLite database (generated)
+├── resume_parser.py          # Resume parsing (PDF/DOCX)
+├── keyword_extractor.py      # AI keyword extraction
+├── excel_sync.py             # Excel to MySQL sync
+├── google_sheets_sync.py     # Google Sheets to MySQL sync
+└── templates/
+    └── index.html            # Frontend interface
 ```
 
 ## 🚀 Quick Start
@@ -39,13 +42,24 @@ An intelligent volunteer recruitment platform that uses AI-powered resume parsin
    CREATE DATABASE resumatch_db;
    ```
 
-### 2. Configure Application
+### 2. Configure Environment Variables
 
-Edit `config.py`:
-```python
-MYSQL_USERNAME = "root"  # Your MySQL username
-MYSQL_PASSWORD = "your_password"  # Your MySQL password
-```
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` file with your credentials:
+   ```env
+   # Azure OpenAI Configuration
+   AZURE_OPENAI_API_KEY=your_api_key_here
+   AZURE_OPENAI_ENDPOINT=https://your-endpoint.cognitiveservices.azure.com/
+   
+   # MySQL Configuration
+   MYSQL_USERNAME=root
+   MYSQL_PASSWORD=your_mysql_password_here
+   MYSQL_DATABASE=resumatch_db
+   ```
 
 ### 3. Install Dependencies
 
@@ -61,11 +75,14 @@ python app.py
 
 Open browser: `http://localhost:5000`
 
-### 5. (Optional) Import Sample Data
+### 5. (Optional) Sync Data from Excel/Google Sheets
 
 ```bash
-python create_sample_data.py
+# From Excel
 python excel_sync.py
+
+# From Google Sheets
+python google_sheets_sync.py
 ```
 
 ## 💾 Database Support
