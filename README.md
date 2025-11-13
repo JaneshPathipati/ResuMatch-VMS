@@ -34,6 +34,29 @@ An intelligent volunteer recruitment platform that uses AI-powered resume parsin
 
 ## 🚀 Quick Start
 
+### 🐳 **Option 1: Docker (Recommended - Fastest Setup)**
+
+```bash
+# 1. Configure environment
+cp .env.example .env
+# Edit .env with your Azure OpenAI credentials
+
+# 2. Start everything with Docker Compose
+docker-compose up -d
+
+# 3. Access application
+# Web Interface: http://localhost:5000
+# MySQL: localhost:3306
+```
+
+**That's it!** Docker automatically sets up MySQL and the Flask app.
+
+📖 **Full Docker guide:** See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md)
+
+---
+
+### 💻 **Option 2: Local Setup (Without Docker)**
+
 ### 1. Setup MySQL Database
 
 1. Install MySQL and open MySQL Workbench

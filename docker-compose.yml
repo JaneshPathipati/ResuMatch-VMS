@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: resumatch_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-Janesh@2006}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-resumatch_db}
+      MYSQL_USER: ${MYSQL_USERNAME:-resumatch_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Janesh@2006}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - resumatch_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_PASSWORD:-Janesh@2006}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Flask Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: resumatch_app
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      # Azure OpenAI
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT:-gpt-4.1}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION:-2025-01-01-preview}
+      
+      # Matching Config
+      MAX_VOLUNTEERS_TO_ANALYZE: ${MAX_VOLUNTEERS_TO_ANALYZE:-50}
+      TOP_MATCHES_TO_RETURN: ${TOP_MATCHES_TO_RETURN:-10}
+      MIN_MATCH_SCORE: ${MIN_MATCH_SCORE:-60}
+      
+      # MySQL Config (using service name as host)
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-resumatch_db}
+      MYSQL_USERNAME: ${MYSQL_USERNAME:-resumatch_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Janesh@2006}
+      MYSQL_USE_SSL: "False"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./credentials.json:/app/credentials.json
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - resumatch_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/stats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  resumatch_network:
+    driver: bridge
+
