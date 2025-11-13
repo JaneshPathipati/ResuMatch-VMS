@@ -1,5 +1,5 @@
 """
-Google Sheets to SQLite Database Sync
+Google Sheets to MySQL Database Sync
 Syncs volunteer data from Google Sheets to the database
 Supports both manual and automatic syncing
 """
@@ -9,6 +9,7 @@ from google.oauth2.service_account import Credentials
 import time
 from datetime import datetime
 import config
+from database_mysql import MySQLDatabase
 
 # Google Sheets API Scopes
 SCOPES = [
@@ -26,22 +27,16 @@ class GoogleSheetSync:
         """
         self.credentials_file = credentials_file
         
-        # Initialize database based on configuration
-        if config.DATABASE_TYPE.lower() == "mysql":
-            from database_mysql import MySQLDatabase
-            self.db = MySQLDatabase(
-                host=config.MYSQL_HOST,
-                port=config.MYSQL_PORT,
-                database=config.MYSQL_DATABASE,
-                username=config.MYSQL_USERNAME,
-                password=config.MYSQL_PASSWORD,
-                use_ssl=config.MYSQL_USE_SSL
-            )
-            print(f"✅ Using MySQL Database: {config.MYSQL_HOST}/{config.MYSQL_DATABASE}")
-        else:
-            from database import Database
-            self.db = Database(db_name=config.SQLITE_DB_NAME)
-            print(f"✅ Using SQLite Database: {config.SQLITE_DB_NAME}")
+        # Initialize MySQL database
+        self.db = MySQLDatabase(
+            host=config.MYSQL_HOST,
+            port=config.MYSQL_PORT,
+            database=config.MYSQL_DATABASE,
+            username=config.MYSQL_USERNAME,
+            password=config.MYSQL_PASSWORD,
+            use_ssl=config.MYSQL_USE_SSL
+        )
+        print(f"✅ Using MySQL Database: {config.MYSQL_HOST}/{config.MYSQL_DATABASE}")
         
         self.client = None
     

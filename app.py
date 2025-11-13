@@ -3,25 +3,20 @@ from flask_cors import CORS
 from resume_matcher import ResumeMatcher  # Back to TF-IDF matcher (fast!)
 from keyword_extractor import KeywordExtractor  # AI for keyword extraction only
 from resume_parser import ResumeParser
+from database_mysql import MySQLDatabase
 import json
 import config
 
-# Initialize database based on configuration
-if config.DATABASE_TYPE.lower() == "mysql":
-    from database_mysql import MySQLDatabase
-    db = MySQLDatabase(
-        host=config.MYSQL_HOST,
-        port=config.MYSQL_PORT,
-        database=config.MYSQL_DATABASE,
-        username=config.MYSQL_USERNAME,
-        password=config.MYSQL_PASSWORD,
-        use_ssl=config.MYSQL_USE_SSL
-    )
-    print(f"✅ Using MySQL Database: {config.MYSQL_HOST}:{config.MYSQL_PORT}/{config.MYSQL_DATABASE}")
-else:
-    from database import Database
-    db = Database(db_name=config.SQLITE_DB_NAME)
-    print(f"✅ Using SQLite Database: {config.SQLITE_DB_NAME}")
+# Initialize MySQL database
+db = MySQLDatabase(
+    host=config.MYSQL_HOST,
+    port=config.MYSQL_PORT,
+    database=config.MYSQL_DATABASE,
+    username=config.MYSQL_USERNAME,
+    password=config.MYSQL_PASSWORD,
+    use_ssl=config.MYSQL_USE_SSL
+)
+print(f"✅ Using MySQL Database: {config.MYSQL_HOST}:{config.MYSQL_PORT}/{config.MYSQL_DATABASE}")
 
 app = Flask(__name__)
 CORS(app)

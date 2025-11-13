@@ -85,24 +85,16 @@ python excel_sync.py
 python google_sheets_sync.py
 ```
 
-## 💾 Database Support
+## 💾 Database
 
-**Two database options:**
-
-### MySQL (Recommended)
-- Better performance
-- Professional database
-- Easy to use with MySQL Workbench
+**MySQL Database:**
+- Professional database with excellent performance
+- Easy to manage with MySQL Workbench
 - Supports concurrent users
+- Perfect for both development and production
+- Local or cloud deployment options
 
-### SQLite (Development)
-- No setup required
-- File-based database
-- Good for testing
-
-**Switch databases:** Change `DATABASE_TYPE` in `config.py`
-
-See `DATABASE_SETUP.md` for detailed instructions.
+The application uses MySQL exclusively for reliable data storage and retrieval.
 
 ## 🎨 How to Use
 
@@ -148,7 +140,7 @@ development practices is a plus.
 ## 🛠️ Technology Stack
 
 - **Backend**: Flask (Python)
-- **Database**: MySQL (or SQLite for development)
+- **Database**: MySQL
 - **AI**: Azure OpenAI (GPT-4) for keyword extraction
 - **ML**: scikit-learn (TF-IDF, Cosine Similarity)
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript
@@ -168,15 +160,6 @@ The system uses a sophisticated matching algorithm:
 6. **Ranking**: Sort candidates by match score and return top N results
 
 ## 🎯 Customization
-
-### Change Database
-Edit `database.py` to use MySQL or PostgreSQL instead of SQLite:
-
-```python
-# For MySQL
-import mysql.connector
-conn = mysql.connector.connect(host='localhost', user='root', password='password', database='volunteers')
-```
 
 ### Adjust Matching Algorithm
 Modify `resume_matcher.py` to customize:

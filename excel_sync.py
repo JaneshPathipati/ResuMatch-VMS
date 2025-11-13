@@ -1,9 +1,10 @@
 import pandas as pd
 import config
+from database_mysql import MySQLDatabase
 
 def sync_excel_to_database(excel_file_path):
     """
-    Sync volunteer data from Excel file to SQL database
+    Sync volunteer data from Excel file to MySQL database
     
     Expected Excel columns:
     - Name
@@ -17,22 +18,16 @@ def sync_excel_to_database(excel_file_path):
     - Certifications
     - Interests
     """
-    # Initialize database based on configuration
-    if config.DATABASE_TYPE.lower() == "mysql":
-        from database_mysql import MySQLDatabase
-        db = MySQLDatabase(
-            host=config.MYSQL_HOST,
-            port=config.MYSQL_PORT,
-            database=config.MYSQL_DATABASE,
-            username=config.MYSQL_USERNAME,
-            password=config.MYSQL_PASSWORD,
-            use_ssl=config.MYSQL_USE_SSL
-        )
-        print(f"✅ Using MySQL Database: {config.MYSQL_HOST}/{config.MYSQL_DATABASE}")
-    else:
-        from database import Database
-        db = Database(db_name=config.SQLITE_DB_NAME)
-        print(f"✅ Using SQLite Database: {config.SQLITE_DB_NAME}")
+    # Initialize MySQL database
+    db = MySQLDatabase(
+        host=config.MYSQL_HOST,
+        port=config.MYSQL_PORT,
+        database=config.MYSQL_DATABASE,
+        username=config.MYSQL_USERNAME,
+        password=config.MYSQL_PASSWORD,
+        use_ssl=config.MYSQL_USE_SSL
+    )
+    print(f"✅ Using MySQL Database: {config.MYSQL_HOST}/{config.MYSQL_DATABASE}")
     
     try:
         # Read Excel file
