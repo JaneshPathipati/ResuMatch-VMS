@@ -1,16 +1,34 @@
-Flask==3.0.0
-flask-cors==4.0.0
-pandas>=2.2.0
-openpyxl>=3.1.2
-scikit-learn>=1.4.0
-numpy>=1.26.0
-gspread>=5.12.0
-google-auth>=2.23.0
-google-auth-oauthlib>=1.1.0
-google-auth-httplib2>=0.1.1
-PyPDF2>=3.0.0
-python-docx>=1.0.0
-openai>=1.0.0
-mysql-connector-python>=8.0.0
-python-dotenv>=1.0.0
+# ========================================
+# ResuMatch VMS - Python Dependencies
+# ========================================
+
+# Web Framework
+Flask==3.0.0                      # Web application framework
+flask-cors==4.0.0                 # Cross-Origin Resource Sharing support
+Werkzeug>=3.0.0                   # WSGI utilities (Flask dependency)
+
+# Data Processing & Analysis
+pandas>=2.2.0                     # Data manipulation and Excel handling
+numpy>=1.26.0                     # Numerical computing
+openpyxl>=3.1.2                   # Excel file format support for pandas
+
+# Machine Learning & AI
+scikit-learn>=1.4.0               # TF-IDF vectorization and cosine similarity
+openai>=1.0.0                     # Azure OpenAI API client for GPT-4
+
+# Database
+mysql-connector-python>=8.0.0    # MySQL database adapter
+
+# Document Parsing
+PyPDF2>=3.0.0                     # PDF resume parsing
+python-docx>=1.0.0                # DOCX resume parsing
+
+# Google Services Integration
+gspread>=5.12.0                   # Google Sheets API
+google-auth>=2.23.0               # Google authentication
+google-auth-oauthlib>=1.1.0       # OAuth 2.0 for Google APIs
+google-auth-httplib2>=0.1.1       # HTTP transport for Google Auth
+
+# Configuration & Environment
+python-dotenv>=1.0.0              # Load environment variables from .env file
 
