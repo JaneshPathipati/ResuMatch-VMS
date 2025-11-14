@@ -14,8 +14,8 @@ import config
 def check_flask_app():
     """Check if Flask application is responding"""
     try:
-        port = config.PORT
-        response = requests.get(f'http://localhost:{port}/health', timeout=5)
+        base_url = config.APP_BASE_URL
+        response = requests.get(f'{base_url}/health', timeout=5)
         if response.status_code == 200:
             print("✅ Flask App: Healthy")
             return True
@@ -63,8 +63,8 @@ def check_ai_service():
 def check_detailed_health():
     """Check detailed health endpoint"""
     try:
-        port = config.PORT
-        response = requests.get(f'http://localhost:{port}/health/detailed', timeout=5)
+        base_url = config.APP_BASE_URL
+        response = requests.get(f'{base_url}/health/detailed', timeout=5)
         if response.status_code == 200:
             data = response.json()
             print("\n📊 Detailed Health Status:")

@@ -29,6 +29,8 @@ MYSQL_USE_SSL = os.getenv('MYSQL_USE_SSL', 'False').lower() == 'true'
 
 # Application Configuration
 PORT = int(os.getenv('PORT', 5000))
+APP_HOST = os.getenv('APP_HOST', 'localhost')
+APP_BASE_URL = os.getenv('APP_BASE_URL', f'http://{APP_HOST}:{PORT}')
 
 # Validate required configuration
 if not AZURE_OPENAI_API_KEY:

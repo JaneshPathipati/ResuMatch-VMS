@@ -362,7 +362,7 @@ if __name__ == '__main__':
     print("🎯 ResuMatch VMS - Starting Server...")
     print("="*60)
     print("\n✅ Database connected and ready!")
-    print(f"✅ Server starting at http://localhost:{config.PORT}")
+    print(f"✅ Server starting at {config.APP_BASE_URL}")
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=config.PORT)
