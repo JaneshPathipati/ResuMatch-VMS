@@ -47,7 +47,7 @@ check_docker() {
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
+    if ! docker compose version &> /dev/null; then
         print_error "Docker Compose is not installed. Please install Docker Compose first."
         echo "Visit: https://docs.docker.com/compose/install/"
         exit 1
@@ -90,7 +90,7 @@ build() {
     print_info "Building Docker images for $PROJECT_NAME..."
     check_docker
     
-    docker-compose build --no-cache
+    docker compose build --no-cache
     
     print_success "Docker images built successfully!"
 }
@@ -108,7 +108,7 @@ init_database() {
     while [ $attempt -lt $max_attempts ]; do
         attempt=$((attempt + 1))
         
-        if docker-compose exec -T mysql mysqladmin ping -h localhost -u root -p"${MYSQL_ROOT_PASS}" 2>/dev/null | grep -q "alive"; then
+        if docker compose exec -T mysql mysqladmin ping -h localhost -u root -p"${MYSQL_ROOT_PASS}" 2>/dev/null | grep -q "alive"; then
             print_success "MySQL is ready"
             break
         fi
@@ -123,13 +123,13 @@ init_database() {
     done
     
     # Check if volunteers table exists
-    TABLE_EXISTS=$(docker-compose exec -T mysql mysql -u root -p"${MYSQL_ROOT_PASS}" -D resumatch_db -e "SHOW TABLES LIKE 'volunteers';" 2>/dev/null | grep -c "volunteers" || echo "0")
+    TABLE_EXISTS=$(docker compose exec -T mysql mysql -u root -p"${MYSQL_ROOT_PASS}" -D resumatch_db -e "SHOW TABLES LIKE 'volunteers';" 2>/dev/null | grep -c "volunteers" || echo "0")
     
     if [ "$TABLE_EXISTS" = "0" ]; then
         print_info "Tables not found. Initializing database schema..."
         
         if [ -f "init.sql" ]; then
-            docker-compose exec -T mysql mysql -u root -p"${MYSQL_ROOT_PASS}" < init.sql
+            docker compose exec -T mysql mysql -u root -p"${MYSQL_ROOT_PASS}" < init.sql
             
             if [ $? -eq 0 ]; then
                 print_success "Database initialized successfully!"
@@ -153,7 +153,7 @@ start() {
     check_env_file
     check_credentials
     
-    docker-compose up -d
+    docker compose up -d
     
     print_success "Containers started successfully!"
     print_info "Waiting for services to be healthy..."
@@ -185,7 +185,7 @@ start() {
 stop() {
     print_info "Stopping $PROJECT_NAME containers..."
     
-    docker-compose down
+    docker compose down
     
     print_success "Containers stopped successfully!"
 }
@@ -194,7 +194,7 @@ stop() {
 restart() {
     print_info "Restarting $PROJECT_NAME containers..."
     
-    docker-compose restart
+    docker compose restart
     
     print_success "Containers restarted successfully!"
 }
@@ -204,9 +204,9 @@ logs() {
     print_info "Showing logs for $PROJECT_NAME..."
     
     if [ -z "$1" ]; then
-        docker-compose logs -f
+        docker compose logs -f
     else
-        docker-compose logs -f "$1"
+        docker compose logs -f "$1"
     fi
 }
 
@@ -214,7 +214,7 @@ logs() {
 status() {
     print_info "Status of $PROJECT_NAME containers:"
     echo ""
-    docker-compose ps
+    docker compose ps
     echo ""
     
     # Check if app is responding
@@ -231,7 +231,7 @@ health() {
     echo ""
     
     # Check if containers are running
-    if ! docker-compose ps | grep -q "Up"; then
+    if ! docker compose ps | grep -q "Up"; then
         print_error "Containers are not running. Start them with: ./setup.sh start"
         return 1
     fi
@@ -263,14 +263,14 @@ health() {
         echo ""
         print_info "Running comprehensive health check script..."
         echo ""
-        docker-compose exec -T app python healthcheck.py
+        docker compose exec -T app python healthcheck.py
     fi
     
     echo ""
     print_info "MySQL Health Check:"
     # Use environment variable or default password
     MYSQL_ROOT_PASS=${MYSQL_ROOT_PASSWORD:-Janesh@2006}
-    if docker-compose exec -T mysql mysqladmin ping -h localhost -u root -p"${MYSQL_ROOT_PASS}" 2>/dev/null | grep -q "alive"; then
+    if docker compose exec -T mysql mysqladmin ping -h localhost -u root -p"${MYSQL_ROOT_PASS}" 2>/dev/null | grep -q "alive"; then
         print_success "MySQL is alive and responding"
     else
         print_error "MySQL health check failed"
@@ -310,7 +310,7 @@ clean() {
     
     if [ "$confirm" = "yes" ]; then
         print_info "Cleaning up..."
-        docker-compose down -v
+        docker compose down -v
         print_success "Cleanup complete!"
     else
         print_info "Cleanup cancelled"
@@ -321,9 +321,9 @@ clean() {
 rebuild() {
     print_info "Rebuilding and restarting $PROJECT_NAME..."
     
-    docker-compose down
-    docker-compose build --no-cache
-    docker-compose up -d
+    docker compose down
+    docker compose build --no-cache
+    docker compose up -d
     
     print_success "Rebuild complete!"
     print_info "Application is running at: http://localhost:${APP_PORT}"
@@ -334,9 +334,9 @@ exec_app() {
     print_info "Executing command in app container..."
     
     if [ -z "$1" ]; then
-        docker-compose exec app bash
+        docker compose exec app bash
     else
-        docker-compose exec app "$@"
+        docker compose exec app "$@"
     fi
 }
 
@@ -344,7 +344,7 @@ exec_app() {
 exec_db() {
     print_info "Connecting to MySQL..."
     
-    docker-compose exec mysql mysql -u resumatch_user -p resumatch_db
+    docker compose exec mysql mysql -u resumatch_user -p resumatch_db
 }
 
 # Function to backup database
@@ -357,7 +357,7 @@ backup() {
     MYSQL_DB=${MYSQL_DATABASE:-resumatch_db}
     
     BACKUP_FILE="backup_$(date +%Y%m%d_%H%M%S).sql"
-    docker-compose exec -T mysql mysqldump -u "${MYSQL_USER}" -p"${MYSQL_PASS}" "${MYSQL_DB}" > "$BACKUP_FILE"
+    docker compose exec -T mysql mysqldump -u "${MYSQL_USER}" -p"${MYSQL_PASS}" "${MYSQL_DB}" > "$BACKUP_FILE"
     
     print_success "Database backed up to: $BACKUP_FILE"
 }

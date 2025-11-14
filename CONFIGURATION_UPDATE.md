@@ -51,7 +51,7 @@ This will override the auto-constructed URL.
 
 ## Docker Considerations
 
-The Docker healthcheck commands in `Dockerfile` and `docker-compose.yml` still use `http://localhost` because:
+The Docker healthcheck commands in `Dockerfile` and `docker compose.yml` still use `http://localhost` because:
 1. They run **inside** the container
 2. They need to check the local container's health
 3. The container always listens on `0.0.0.0` internally

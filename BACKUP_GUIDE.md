@@ -40,7 +40,7 @@ This creates a file like `backup_20251114_123456.sql` that you can restore to an
 
 ### Method 3: Manual SQL Dump
 ```bash
-docker-compose exec -T mysql mysqldump -u resumatch_user -p resumatch_db > backup.sql
+docker compose exec -T mysql mysqldump -u resumatch_user -p resumatch_db > backup.sql
 # Enter password when prompted
 ```
 
@@ -70,7 +70,7 @@ tar -xzf mysql_data_backup_YYYYMMDD_HHMMSS.tar.gz
 ./setup.sh start
 
 # Restore from SQL file
-docker-compose exec -T mysql mysql -u resumatch_user -p resumatch_db < backup.sql
+docker compose exec -T mysql mysql -u resumatch_user -p resumatch_db < backup.sql
 # Enter password when prompted
 ```
 

@@ -69,7 +69,7 @@ Returns detailed status of all components:
 python3 healthcheck.py
 
 # Run inside container
-docker-compose exec app python healthcheck.py
+docker compose exec app python healthcheck.py
 ```
 
 ### Via curl
@@ -84,7 +84,7 @@ curl http://localhost:5000/health/detailed | python3 -m json.tool
 ### Via Docker Health Check
 ```bash
 # Check Docker health status
-docker-compose ps
+docker compose ps
 
 # View health check logs
 docker inspect resumatch_app | grep -A 10 Health
@@ -116,7 +116,7 @@ The Flask application container includes automatic health checks:
 ## Integration with Monitoring
 
 ### Docker Compose
-Health checks are automatically configured in `docker-compose.yml`:
+Health checks are automatically configured in `docker compose.yml`:
 ```yaml
 healthcheck:
   test: ["CMD", "curl", "-f", "http://localhost:5000/api/stats"]
@@ -180,7 +180,7 @@ readinessProbe:
 ./setup.sh db
 
 # Check database health
-docker-compose exec mysql mysqladmin ping -h localhost -u root -p
+docker compose exec mysql mysqladmin ping -h localhost -u root -p
 ```
 
 ### Component Status Issues

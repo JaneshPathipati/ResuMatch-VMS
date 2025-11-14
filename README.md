@@ -42,7 +42,7 @@ cp .env.example .env
 # Edit .env with your Azure OpenAI credentials
 
 # 2. Start everything with Docker Compose
-docker-compose up -d
+docker compose up -d
 
 # 3. Access application
 # Web Interface: http://localhost:5000

@@ -24,7 +24,7 @@ MYSQL_PASSWORD=your_secure_password
 
 ## Default Configuration
 
-The project uses these defaults (defined in `docker-compose.yml`):
+The project uses these defaults (defined in `docker compose.yml`):
 
 ```bash
 MYSQL_ROOT_PASSWORD=Janesh@2006  # Root user password
@@ -64,10 +64,10 @@ mysql -h localhost -P 3306 -u resumatch_user -p
 ./setup.sh db
 
 # Manual connection as root
-docker-compose exec mysql mysql -u root -p
+docker compose exec mysql mysql -u root -p
 
 # Manual connection as application user
-docker-compose exec mysql mysql -u resumatch_user -p
+docker compose exec mysql mysql -u resumatch_user -p
 ```
 
 ### From Python Application
@@ -108,7 +108,7 @@ The application automatically uses `MYSQL_USERNAME` and `MYSQL_PASSWORD` from en
 
 **Solutions**:
 1. Check your `.env` file has correct credentials
-2. Verify environment variables: `docker-compose config | grep MYSQL`
+2. Verify environment variables: `docker compose config | grep MYSQL`
 3. Clear volumes and restart: `./setup.sh clean` then `./setup.sh start`
 
 ### Database Connection Timeout
@@ -117,7 +117,7 @@ The application automatically uses `MYSQL_USERNAME` and `MYSQL_PASSWORD` from en
 **Solutions**:
 1. Wait for MySQL to be healthy: `./setup.sh health`
 2. Check MySQL logs: `./setup.sh logs mysql`
-3. Verify MySQL is running: `docker-compose ps`
+3. Verify MySQL is running: `docker compose ps`
 
 ## Testing Configuration
 

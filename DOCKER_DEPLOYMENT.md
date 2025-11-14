@@ -28,13 +28,13 @@ cp .env.example .env
 ### 2. Start Everything with Docker Compose
 ```bash
 # Build and start all services (MySQL + Flask App)
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Check status
-docker-compose ps
+docker compose ps
 ```
 
 ### 3. Access Application
@@ -44,10 +44,10 @@ docker-compose ps
 ### 4. Stop Services
 ```bash
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (⚠️ deletes data)
-docker-compose down -v
+docker compose down -v
 ```
 
 ---
@@ -58,7 +58,7 @@ docker-compose down -v
 Runs both MySQL and Flask app together:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 ### Option 2: Use Local MySQL + Dockerized App
@@ -116,8 +116,8 @@ docker run -d \
 
 ### Option 2: Deploy Complete Stack (App + MySQL)
 ```bash
-# Use production docker-compose
-docker-compose -f docker-compose.prod.yml up -d
+# Use production docker compose
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ---
@@ -149,7 +149,7 @@ MYSQL_USE_SSL=False
 ```
 
 ### Docker Compose Environment
-When using `docker-compose.yml`, the app automatically connects to the MySQL container using the service name `mysql`.
+When using `docker compose.yml`, the app automatically connects to the MySQL container using the service name `mysql`.
 
 ---
 
@@ -191,23 +191,23 @@ docker build --no-cache -t resumatch-app .
 ### Docker Compose Commands
 ```bash
 # Start services
-docker-compose up -d
+docker compose up -d
 
 # Stop services
-docker-compose down
+docker compose down
 
 # View logs
-docker-compose logs -f app
-docker-compose logs -f mysql
+docker compose logs -f app
+docker compose logs -f mysql
 
 # Restart a service
-docker-compose restart app
+docker compose restart app
 
 # Rebuild and start
-docker-compose up -d --build
+docker compose up -d --build
 
 # Scale services
-docker-compose up -d --scale app=3
+docker compose up -d --scale app=3
 ```
 
 ---
@@ -253,13 +253,13 @@ docker run --rm -v resumatch-vms_mysql_data:/data -v $(pwd):/backup ubuntu tar c
 **Solution:**
 ```bash
 # Check if MySQL is healthy
-docker-compose ps
+docker compose ps
 
 # View MySQL logs
-docker-compose logs mysql
+docker compose logs mysql
 
 # Ensure .env has correct MYSQL_HOST
-# For docker-compose: MYSQL_HOST=mysql
+# For docker compose: MYSQL_HOST=mysql
 # For host MySQL: MYSQL_HOST=host.docker.internal
 ```
 
@@ -270,7 +270,7 @@ docker-compose logs mysql
 lsof -i :5000  # Mac/Linux
 netstat -ano | findstr :5000  # Windows
 
-# Change port in docker-compose.yml
+# Change port in docker compose.yml
 ports:
   - "8080:5000"  # Use port 8080 instead
 ```
@@ -279,8 +279,8 @@ ports:
 **Solution:**
 ```bash
 # Remove volumes and recreate
-docker-compose down -v
-docker-compose up -d
+docker compose down -v
+docker compose up -d
 
 # Or manually run init.sql
 docker exec -i resumatch_mysql mysql -u root -p${MYSQL_PASSWORD} resumatch_db < init.sql
@@ -374,13 +374,13 @@ az container create \
 ### View Real-time Logs
 ```bash
 # All services
-docker-compose logs -f
+docker compose logs -f
 
 # Specific service
-docker-compose logs -f app
+docker compose logs -f app
 
 # Last 100 lines
-docker-compose logs --tail=100 app
+docker compose logs --tail=100 app
 ```
 
 ### Container Stats
