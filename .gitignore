@@ -27,6 +27,7 @@ wheels/
 *.db
 *.sqlite
 *.sqlite3
+mysql_data/
 
 # Excel files (except sample)
 # volunteers_data.xlsx

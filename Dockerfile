@@ -29,12 +29,12 @@ COPY . .
 # Create directory for uploads (if needed)
 RUN mkdir -p /app/uploads
 
-# Expose port
-EXPOSE 5000
+# Expose port (default 8080, can be overridden with PORT env var)
+EXPOSE ${PORT:-8080}
 
-# Health check
+# Health check - uses PORT env var
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:5000/api/stats')" || exit 1
+    CMD python -c "import os, requests; requests.get(f'http://localhost:{os.getenv(\"PORT\", \"8080\")}/api/stats')" || exit 1
 
 # Run the application
 CMD ["python", "app.py"]

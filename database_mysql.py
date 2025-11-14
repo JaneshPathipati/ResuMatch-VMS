@@ -283,4 +283,18 @@ class MySQLDatabase:
         except Error as e:
             print(f"Connection test failed: {e}")
             return False
+    
+    def get_current_timestamp(self):
+        """Get current timestamp from database server"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT NOW()")
+            result = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            return result[0] if result else None
+        except Error as e:
+            print(f"Error getting timestamp: {e}")
+            return None
 

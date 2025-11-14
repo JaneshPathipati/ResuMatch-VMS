@@ -267,13 +267,103 @@ def get_stats():
             'error': str(e)
         }), 500
 
+@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Basic health check endpoint"""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'ResuMatch-VMS',
+        'timestamp': str(db.get_current_timestamp()) if hasattr(db, 'get_current_timestamp') else None
+    }), 200
+
+@app.route('/health/detailed', methods=['GET'])
+@app.route('/api/health/detailed', methods=['GET'])
+def detailed_health_check():
+    """Detailed health check with all component status"""
+    health_status = {
+        'status': 'healthy',
+        'service': 'ResuMatch-VMS',
+        'components': {}
+    }
+    
+    # Check Database
+    try:
+        db.get_all_volunteers()
+        health_status['components']['database'] = {
+            'status': 'healthy',
+            'type': 'MySQL',
+            'host': config.MYSQL_HOST
+        }
+    except Exception as e:
+        health_status['status'] = 'unhealthy'
+        health_status['components']['database'] = {
+            'status': 'unhealthy',
+            'error': str(e)
+        }
+    
+    # Check AI Services (Azure OpenAI)
+    try:
+        if config.AZURE_OPENAI_API_KEY and config.AZURE_OPENAI_ENDPOINT:
+            health_status['components']['ai_service'] = {
+                'status': 'configured',
+                'provider': 'Azure OpenAI',
+                'deployment': config.AZURE_OPENAI_DEPLOYMENT
+            }
+        else:
+            health_status['components']['ai_service'] = {
+                'status': 'not_configured',
+                'warning': 'Azure OpenAI credentials not set'
+            }
+    except Exception as e:
+        health_status['components']['ai_service'] = {
+            'status': 'error',
+            'error': str(e)
+        }
+    
+    # Check Resume Matcher
+    try:
+        if matcher:
+            health_status['components']['resume_matcher'] = {
+                'status': 'ready',
+                'type': 'TF-IDF'
+            }
+        else:
+            health_status['components']['resume_matcher'] = {
+                'status': 'not_initialized'
+            }
+    except Exception as e:
+        health_status['components']['resume_matcher'] = {
+            'status': 'error',
+            'error': str(e)
+        }
+    
+    # Check Resume Parser
+    try:
+        if parser:
+            health_status['components']['resume_parser'] = {
+                'status': 'ready'
+            }
+        else:
+            health_status['components']['resume_parser'] = {
+                'status': 'not_initialized'
+            }
+    except Exception as e:
+        health_status['components']['resume_parser'] = {
+            'status': 'error',
+            'error': str(e)
+        }
+    
+    status_code = 200 if health_status['status'] == 'healthy' else 503
+    return jsonify(health_status), status_code
+
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("🎯 ResuMatch VMS - Starting Server...")
     print("="*60)
     print("\n✅ Database connected and ready!")
-    print("✅ Server starting at http://localhost:5000")
+    print(f"✅ Server starting at http://localhost:{config.PORT}")
     print("="*60 + "\n")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=config.PORT)
 

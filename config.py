@@ -27,6 +27,9 @@ MYSQL_USERNAME = os.getenv('MYSQL_USERNAME', 'root')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
 MYSQL_USE_SSL = os.getenv('MYSQL_USE_SSL', 'False').lower() == 'true'
 
+# Application Configuration
+PORT = int(os.getenv('PORT', 5000))
+
 # Validate required configuration
 if not AZURE_OPENAI_API_KEY:
     raise ValueError("⚠️  AZURE_OPENAI_API_KEY is not set in .env file!")

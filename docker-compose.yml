@@ -7,19 +7,19 @@ services:
     container_name: resumatch_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-Janesh@2006}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Janesh@2006}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-resumatch_db}
       MYSQL_USER: ${MYSQL_USERNAME:-resumatch_user}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Janesh@2006}
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./mysql_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - resumatch_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_PASSWORD:-Janesh@2006}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-Janesh@2006}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,8 +32,10 @@ services:
     container_name: resumatch_app
     restart: always
     ports:
-      - "5000:5000"
+      - "${PORT:-8080}:${PORT:-8080}"
     environment:
+      # Application Port
+      PORT: ${PORT:-8080}
       # Azure OpenAI
       AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
       AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
@@ -61,15 +63,11 @@ services:
     networks:
       - resumatch_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/stats"]
+      test: ["CMD", "sh", "-c", "curl -f http://localhost:$${PORT:-8080}/api/stats"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
-volumes:
-  mysql_data:
-    driver: local
 
 networks:
   resumatch_network:
